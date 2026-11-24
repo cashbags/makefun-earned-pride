@@ -37,8 +37,19 @@ import os
 
 LINE = "Ellis drove his final route the way he had for thirty years, and every regular was waiting at the kerb, waving him home."
 
+# The gate (competition.yaml / RULES.txt): /output/entry.txt must be UTF-8
+# text of 1 to 240 characters, not only white space.
+GATE_MIN_CHARS = 1
+GATE_MAX_CHARS = 240
+
 
 def main() -> None:
+    # Fail loudly here rather than shipping a file the grader would
+    # refuse: a line outside the gate never reaches the judge.
+    if not GATE_MIN_CHARS <= len(LINE) <= GATE_MAX_CHARS:
+        raise ValueError(
+            f"entry line is {len(LINE)} characters; the gate allows 1-240"
+        )
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8", newline="\n") as f:
